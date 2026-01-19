@@ -19,6 +19,7 @@ tf12() {
         -e AWS_SDK_LOAD_CONFIG=1
         -e KUBECONFIG="/root/.kube/config"
         -e GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+        --env-file "$HOME/.env.tf12"
         -w "/workspace$RELATIVE_PATH"
     )
 

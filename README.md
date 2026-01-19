@@ -21,6 +21,7 @@ This Dockerized workflow avoids relying on process-level Rosetta emulation on ma
 - **Docker Desktop** installed
 - **Enable Rosetta**: Docker Settings → General → Check *"Use Rosetta for x86/amd64 emulation on Apple Silicon"*
 - **AWS credentials** configured locally (if using AWS)
+- **SSH keys** configured for Git access (if using Terraform modules from private Git repositories)
 
 
 ## Setup (One-time)
@@ -72,6 +73,23 @@ tf12 plan
 tf12 apply
 ```
 
+### Optional: Environment Variables File
+
+The `tf12` wrapper automatically loads environment variables from `~/.env.tf12` if it exists. Create this file to set additional environment variables that should be available inside the container:
+
+```bash
+# ~/.env.tf12
+TF_VAR_my_variable=value
+CUSTOM_ENV_VAR=value
+```
+
+## Features
+
+- **Terraform 0.12.31** with AWS CLI support
+- **Git** included for downloading Terraform modules from Git repositories (including private repos via SSH)
+- **SSH key mounting** for Git authentication
+- **AWS credentials** mounted from your local `~/.aws` directory
+
 ## Troubleshooting
 
 **AWS authentication error (exit code 255)**
@@ -90,3 +108,8 @@ tf12 apply
 **"Cannot connect to Docker daemon"**
 - Ensure Docker Desktop is running
 - Restart Docker Desktop if needed
+
+**Git module download errors**
+- Ensure your SSH keys are available in `~/.ssh` (they are automatically mounted into the container)
+- For private repositories, verify your SSH key has access: `ssh -T git@github.com`
+- The container uses `GIT_SSH_COMMAND` with relaxed host key checking for convenience
